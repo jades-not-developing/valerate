@@ -9,7 +9,7 @@
 
 std::vector<token::Token> tokenize(const std::string& str) {
   std::vector<token::Token> tokens;
-  std::string buf {};
+  std::string buf;
   for (i32 i = 0; i < str.length(); ++i) {
     char c = str.at(i);
     if (std::isalpha(c)) {

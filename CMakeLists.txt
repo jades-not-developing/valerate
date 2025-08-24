@@ -8,6 +8,14 @@ add_executable(c_compiler
   src/fs.cpp
   src/token.cpp)
 
-target_compile_options(c_compiler PRIVATE /we4062)
+if (WIN32)
+  target_compile_options(c_compiler PRIVATE /we4062)
+endif (WIN32)
+
+if (MSVC)
+  target_compile_options(c_compiler PRIVATE /we4062)
+else()
+  target_compile_options(c_compiler PRIVATE -Wswitch-enum)
+endif()
 
 set_property(TARGET c_compiler PROPERTY CXX_STANDARD 23)
