@@ -11,11 +11,14 @@ namespace token {
   enum class Type {
     _return,
     int_lit,
-    semi
+    semi,
   };
 
   struct Token {
     Type type;
     std::optional<std::string> value;
+    friend std::ostream& operator<<(std::ostream& os, const Token& t);
   };
+
+  std::ostream& operator<<(std::ostream& os, const Token& t);
 }

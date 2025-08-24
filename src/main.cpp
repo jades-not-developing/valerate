@@ -29,7 +29,7 @@ std::vector<token::Token> tokenize(const std::string& str) {
     }
   }
 
-  return std::vector<token::Token>();
+  return tokens;
 }
 
 int main(i32 argc, char* argv[]) {
@@ -38,7 +38,11 @@ int main(i32 argc, char* argv[]) {
   }
 
   std::string buf = fs::read_file(argv[1]);
-  tokenize(buf);
+  auto tokens = tokenize(buf);
+
+  for (token::Token t : tokens) {
+    std::cout << t << std::endl;
+  }
 
   return EXIT_SUCCESS;
 }
