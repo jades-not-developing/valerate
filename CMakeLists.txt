@@ -6,7 +6,10 @@ project(CCompiler)
 add_executable(c_compiler 
   src/main.cpp
   src/fs.cpp
-  src/token.cpp)
+  src/token.cpp
+  src/tokenizer.cpp)
+
+target_include_directories(c_compiler PRIVATE include)
 
 if (WIN32)
   target_compile_options(c_compiler PRIVATE /we4062)
