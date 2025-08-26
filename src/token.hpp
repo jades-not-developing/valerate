@@ -3,19 +3,19 @@
 #include <string>
 #include <optional>
 
-#define TOKEN_RETURN { .type = token::Type::_return }
-#define TOKEN_INT_LIT(x) { .type = token::Type::int_lit, .value = x }
-#define TOKEN_SEMI(x) { .type = token::Type::semi }
+#define TOKEN_RETURN() { .type = token::TokenType::_return }
+#define TOKEN_INT_LIT(x) { .type = token::TokenType::int_lit, .value = x }
+#define TOKEN_SEMI() { .type = token::TokenType::semi }
 
 namespace token {
-  enum class Type {
+  enum class TokenType {
     _return,
     int_lit,
     semi,
   };
 
   struct Token {
-    Type type;
+    TokenType type;
     std::optional<std::string> value;
     friend std::ostream& operator<<(std::ostream& os, const Token& t);
   };
