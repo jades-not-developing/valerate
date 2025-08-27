@@ -6,8 +6,7 @@ project(CCompiler)
 add_executable(c_compiler 
   src/main.cpp
   src/fs.cpp
-  src/token.cpp
-  src/tokenizer.cpp)
+  src/token.cpp)
 
 target_include_directories(c_compiler PRIVATE include)
 

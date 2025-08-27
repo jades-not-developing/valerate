@@ -3,12 +3,13 @@
 #include "types.h"
 #include "macros.hpp"
 
+#include <cctype>
 #include <iostream>
 #include <cassert>
 
 using namespace token;
 
-std::ostream &operator<<(std::ostream &os, const Token &t) {
+std::ostream &token::operator<<(std::ostream &os, const Token &t) {
   switch (t.type) {
   case token::TokenType::exit: {
     os << "Exit";
@@ -35,55 +36,47 @@ Tokenizer::Tokenizer(const std::string src) : m_Src(std::move(src)) {}
 std::vector<token::Token> Tokenizer::tokenize() {
   std::vector<Token> tokens;
   std::string buf;
-  for (i32 i = 0; i < m_Src.length(); ++i) {
-    char c = m_Src.at(i);
 
-    // Identifier
-    if (std::isalpha(c)) {
-      buf.push_back(c);
-      i++;
-      while (std::isalnum(m_Src.at(i))) {
-        buf.push_back(m_Src.at(i));
-        i++;
+  while (peek().has_value()) {
+    
+    // Identifier/Keyword
+    if (std::isalpha(peek().value())) {
+      buf.push_back(consume());
+      while (peek().has_value() && std::isalnum(peek().value())) {
+        buf.push_back(consume());
       }
-      i--;
-
       if (buf == "exit") {
         tokens.push_back(TOKEN_EXIT());
         buf.clear();
-        continue;
-      } else {
-        PANIC("Unrecognized keyword '" << buf << "'");
       }
     }
 
-    // Numerics
-    else if (std::isdigit(c)) {
-      buf.push_back(c);
-      i++;
-      while (std::isdigit(m_Src.at(i))) {
-        buf.push_back(m_Src.at(i));
-        i++;
+    // Numeric
+    else if (std::isdigit(peek().value())) {
+      buf.push_back(consume());
+
+      while (peek().has_value() && std::isdigit(peek().value())) {
+        buf.push_back(consume());
       }
-      i--;
 
       tokens.push_back(TOKEN_INT_LIT(buf));
       buf.clear();
     }
 
     // Operators
-    else if (c == ';')
+    else if (peek().value() == ';') 
       tokens.push_back(TOKEN_SEMI());
 
     // Whitespace
-    else if (std::isspace(c))
+    else if (std::isspace(peek().value()))
       continue;
 
     // Who knows what
     else
-      PANIC("Unrecognized token '" << c << "'");
+      PANIC("Unrecognized character '" << peek().value() << "'");
   }
 
+  m_Index = 0;
   return tokens;
 }
 

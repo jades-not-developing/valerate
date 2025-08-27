@@ -1,4 +1,3 @@
-#include <cctype>
 #include <cstdlib>
 #include <fstream>
 #include <iostream>
@@ -37,7 +36,13 @@ i32 main(i32 argc, char *argv[]) {
   }
 
   std::string buf = fs::read_file(argv[1]);
-  auto tokens = tokenize(buf);
+  Tokenizer tokenizer = Tokenizer(buf);
+
+  auto tokens = tokenizer.tokenize();
+
+  for (auto token : tokens) {
+    std::cout << token << std::endl;
+  }
 
   {
     std::fstream file("out.asm", std::ios::out);

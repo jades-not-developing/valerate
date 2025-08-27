@@ -31,7 +31,7 @@ namespace token {
     std::optional<char> peek(i32 ahead = 1) const;
     char consume();
 
-    i32 m_Index;
+    i32 m_Index = 0;
     const std::string m_Src;
 
   public:
