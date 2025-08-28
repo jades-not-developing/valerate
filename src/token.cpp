@@ -64,12 +64,17 @@ std::vector<token::Token> Tokenizer::tokenize() {
     }
 
     // Operators
-    else if (peek().value() == ';') 
+    else if (peek().value() == ';') {
+      consume();
       tokens.push_back(TOKEN_SEMI());
+      continue;
+    }
 
     // Whitespace
-    else if (std::isspace(peek().value()))
+    else if (std::isspace(peek().value())) {
+      consume();
       continue;
+    }
 
     // Who knows what
     else
