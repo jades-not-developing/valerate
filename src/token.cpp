@@ -83,12 +83,12 @@ std::vector<token::Token> Tokenizer::tokenize() {
   return tokens;
 }
 
-std::optional<char> Tokenizer::peek(i32 ahead) const {
-  if (m_Index + ahead >= m_Src.length()) {
+std::optional<char> Tokenizer::peek(i32 offset) const {
+  if (m_Index + offset >= m_Src.length()) {
     return {};
   } 
 
-  return m_Src.at(m_Index);
+  return m_Src.at(m_Index + offset);
 }
 
 

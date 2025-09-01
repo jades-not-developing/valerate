@@ -7,12 +7,12 @@ Parser::Parser(std::vector<Token> tokens)
 {
 }
 
-std::optional<Token> Parser::peek(i32 ahead) const
+std::optional<Token> Parser::peek(i32 offset) const
 {
-  if (m_Index + ahead > m_Tokens.size()) {
+  if (m_Index + offset >= m_Tokens.size()) {
     return {};
   } else {
-    return m_Tokens.at(m_Index);
+    return m_Tokens.at(m_Index + offset);
   }
 }
 
@@ -20,7 +20,6 @@ Token Parser::consume()
 {
   return m_Tokens.at(m_Index++);
 }
-
 
 std::optional<Node::Expr> Parser::parse_expr()
 {

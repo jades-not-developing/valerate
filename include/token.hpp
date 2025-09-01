@@ -28,7 +28,7 @@ namespace token {
 
   class Tokenizer {
   private:
-    std::optional<char> peek(i32 ahead = 1) const;
+    std::optional<char> peek(i32 offset = 0) const;
     char consume();
 
     i32 m_Index = 0;

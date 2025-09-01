@@ -2,6 +2,13 @@ cmake_minimum_required(VERSION 3.20)
 
 project(Valerate)
 
+option(VALERATE_DEBUG "Creates a debug build" OFF)
+
+if (VALERATE_DEBUG)
+  add_compile_definitions(VALERATE_DEBUG)
+  message(WARNING "=*=      Debug Mode Enabled!      =*=")
+endif()
+
 add_executable(vcc 
   src/main.cpp
   src/fs.cpp

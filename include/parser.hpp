@@ -24,7 +24,7 @@ public:
   std::optional<Node::Exit> parse();
 
 private:
-  [[nodiscard]] std::optional<Token> peek(i32 ahead = 1) const;
+  [[nodiscard]] std::optional<Token> peek(i32 offset = 0) const;
   Token consume();
 
   std::optional<Node::Expr> parse_expr();
