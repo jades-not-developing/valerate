@@ -31,8 +31,6 @@ std::ostream &token::operator<<(std::ostream &os, const Token &t) {
   return os;
 }
 
-Tokenizer::Tokenizer(const std::string src) : m_Src(std::move(src)) {}
-
 std::vector<token::Token> Tokenizer::tokenize() {
   std::vector<Token> tokens;
   std::string buf;

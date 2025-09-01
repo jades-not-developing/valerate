@@ -35,7 +35,7 @@ namespace token {
     const std::string m_Src;
 
   public:
-    Tokenizer(const std::string src);
+    [[nodiscard]] inline Tokenizer(const std::string src) : m_Src(std::move(src)) {}
 
     std::vector<token::Token> tokenize();
   };

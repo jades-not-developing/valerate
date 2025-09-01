@@ -6,7 +6,10 @@ project(CCompiler)
 add_executable(c_compiler 
   src/main.cpp
   src/fs.cpp
-  src/token.cpp)
+  src/token.cpp
+  src/parser.cpp
+  src/generation.cpp
+)
 
 target_include_directories(c_compiler PRIVATE include)
 
