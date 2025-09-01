@@ -23,8 +23,22 @@ std::ostream &token::operator<<(std::ostream &os, const Token &t) {
     }
   } break;
 
+  case token::TokenType::ident: {
+    if (t.value) {
+      os << "Ident(Some(\"" << t.value.value() << "\"))";
+    } else {
+      os << "Ident(None)";
+    }
+  } break;
+
   case token::TokenType::semi: {
     os << "Semi";
+  } break;
+  case token::TokenType::open_paren: {
+    os << "OpenParen";
+  } break;
+  case token::TokenType::close_paren: {
+    os << "CloseParen";
   } break;
   }
 
@@ -47,6 +61,11 @@ std::vector<token::Token> Tokenizer::tokenize() {
         tokens.push_back(TOKEN_EXIT());
         buf.clear();
       }
+      else {
+        tokens.push_back(TOKEN_IDENT(buf));
+        buf.clear();
+        continue;
+      }
     }
 
     // Numeric
@@ -62,6 +81,16 @@ std::vector<token::Token> Tokenizer::tokenize() {
     }
 
     // Operators
+    else if (peek().value() == '(') {
+      consume();
+      tokens.push_back(TOKEN_OPEN_PAREN());
+      continue;
+    }
+    else if (peek().value() == ')') {
+      consume();
+      tokens.push_back(TOKEN_CLOSE_PAREN());
+      continue;
+    }
     else if (peek().value() == ';') {
       consume();
       tokens.push_back(TOKEN_SEMI());

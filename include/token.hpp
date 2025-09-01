@@ -8,6 +8,9 @@
 #define TOKEN_EXIT() {.type = token::TokenType::exit}
 #define TOKEN_INT_LIT(x) {.type = token::TokenType::int_lit, .value = x}
 #define TOKEN_SEMI() {.type = token::TokenType::semi}
+#define TOKEN_OPEN_PAREN() {.type = token::TokenType::open_paren}
+#define TOKEN_CLOSE_PAREN() {.type = token::TokenType::close_paren}
+#define TOKEN_IDENT(x) {.type = token::TokenType::ident, .value = x}
 
 namespace token {
   #include "types.h"
@@ -16,6 +19,9 @@ namespace token {
     exit,
     int_lit,
     semi,
+    open_paren,
+    close_paren,
+    ident,
   };
 
   struct Token {
