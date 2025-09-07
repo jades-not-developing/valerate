@@ -11,6 +11,8 @@
 #define TOKEN_OPEN_PAREN() {.type = token::TokenType::open_paren}
 #define TOKEN_CLOSE_PAREN() {.type = token::TokenType::close_paren}
 #define TOKEN_IDENT(x) {.type = token::TokenType::ident, .value = x}
+#define TOKEN_LET() {.type = token::TokenType::let }
+#define TOKEN_EQ() {.type = token::TokenType::eq }
 
 namespace token {
   #include "types.h"
@@ -22,6 +24,8 @@ namespace token {
     open_paren,
     close_paren,
     ident,
+    let,
+    eq,
   };
 
   struct Token {

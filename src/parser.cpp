@@ -19,35 +19,32 @@ bool Parser::expect(TokenType type, i32 offset) {
 }
 
 std::optional<Node::Expr> Parser::parse_expr() {
-  if (expect(TokenType::int_lit)) {
+  if (expect(TokenType::int_lit)) 
     return Node::Expr{
       .v = Node::ExprIntLit{
         .int_lit = consume()
       }
     };
-  } 
-  else if (expect(TokenType::ident)) {
+   
+  else if (expect(TokenType::ident)) 
     return Node::Expr {
       .v = Node::ExprIdent{
         .ident = consume()
       }
     };
-  }
-  else {
-    return {};
-  }
+  
+  else return {};
 }
 
-std::optional<Node::Exit> Parser::parse() {
-  std::optional<Node::Exit> exit_node;
+std::optional<Node::Stmt> Parser::parse_stmt() {
+  if (expect(TokenType::exit) && expect(TokenType::open_paren, 1)) {
+      consume();
+      consume();
 
-  while (peek().has_value()) {
-    if (expect(TokenType::exit) && expect(TokenType::open_paren, 1)) {
-      consume();
-      consume();
+      Node::StmtExit stmt_exit; 
 
       if (auto node_expr = parse_expr())
-        exit_node = Node::Exit{.expr = node_expr.value()};
+        stmt_exit = Node::StmtExit{.expr = node_expr.value()};
       else
         PANIC("Invalid Expression!");
 
@@ -60,9 +57,40 @@ std::optional<Node::Exit> Parser::parse() {
         consume();
       else
         PANIC("Expected `;`");
+
+      return Node::Stmt { .v = stmt_exit };
+  } else if (expect(TokenType::let)) {
+    if (!expect(TokenType::ident, 1)) PANIC("Expected ident, found " << peek(1).value());
+    if (!expect(TokenType::eq, 2)) PANIC("Expected `=`, found " << peek(1).value());
+    consume();
+    auto stmt_let = Node::StmtLet { .ident = consume() };
+    consume();
+
+    if (auto expr = parse_expr()) {
+      stmt_let.expr = expr.value();
+    } else {
+      PANIC("Invalid expression");
+    }
+
+    if (!expect(TokenType::semi)) PANIC("Expected `;`, found " << peek().value());
+    consume();
+
+    return Node::Stmt { .v = stmt_let };
+  } else {
+    return {};
+  } 
+}
+
+Node::Program Parser::parse_program() {
+  Node::Program prog;
+
+  while (peek().has_value()) {
+    if (auto stmt = parse_stmt()) {
+      prog.stmts.push_back(stmt.value());
+    } else {
+      PANIC("Invalid Statement");
     }
   }
 
-  m_Index = 0;
-  return exit_node;
+  return prog;
 }

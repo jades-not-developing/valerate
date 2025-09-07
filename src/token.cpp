@@ -15,6 +15,14 @@ std::ostream &token::operator<<(std::ostream &os, const Token &t) {
     os << "Exit";
   } break;
 
+  case token::TokenType::let: {
+    os << "Let";
+  } break;
+
+  case token::TokenType::eq: {
+    os << "Eq";
+  } break;
+
   case token::TokenType::int_lit: {
     if (t.value) {
       os << "IntLit(Some(\"" << t.value.value() << "\"))";
@@ -60,6 +68,12 @@ std::vector<token::Token> Tokenizer::tokenize() {
       if (buf == "exit") {
         tokens.push_back(TOKEN_EXIT());
         buf.clear();
+        continue;
+      }
+      else if (buf == "let") {
+        tokens.push_back(TOKEN_LET());
+        buf.clear();
+        continue;
       }
       else {
         tokens.push_back(TOKEN_IDENT(buf));
@@ -84,6 +98,11 @@ std::vector<token::Token> Tokenizer::tokenize() {
     else if (peek().value() == '(') {
       consume();
       tokens.push_back(TOKEN_OPEN_PAREN());
+      continue;
+    }
+    else if (peek().value() == '=') {
+      consume();
+      tokens.push_back(TOKEN_EQ());
       continue;
     }
     else if (peek().value() == ')') {

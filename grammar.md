@@ -5,8 +5,8 @@ $$
 
 [\text{stmt}] &\to 
 	\begin{cases}
-		exit([\text{expr}]); \\
-		let\space\text{ident} = [\text{expr}];
+		\text{exit}([\text{expr}]); \\
+		\text{let}\space\text{ident} = [\text{expr}];
 	\end{cases}\\
 
 [\text{expr}] &\to 

@@ -10,27 +10,7 @@
 #include "generation.hpp"
 #include "types.h"
 
-
 using namespace token;
-
-//std::string assemble(const std::vector<Token> &tokens) {
-//  std::stringstream output;
-//  output << "global _start\n_start:\n";
-//  for (i32 i = 0; i < tokens.size(); ++i) {
-//    const Token &t = tokens.at(i);
-//    if (t.type == TokenType::exit) {
-//      if (i + 1 < tokens.size() &&
-//          tokens.at(i + 1).type == TokenType::int_lit) {
-//        if (i + 2 < tokens.size() && tokens.at(i + 2).type == TokenType::semi) {
-//          output << "    mov eax, " << tokens.at(i + 1).value.value() << "\n";
-//          output << "    ret\n";
-//        }
-//      }
-//    }
-//  }
-//
-//  return output.str();
-//}
 
 i32 main(i32 argc, char *argv[]) {
   if (argc != 2) {
@@ -44,16 +24,12 @@ i32 main(i32 argc, char *argv[]) {
   auto tokens = tokenizer.tokenize();
   Parser parser(tokens);
 
-  std::optional<Node::Exit> tree = parser.parse();
-  if (!tree.has_value()) {
-    PANIC("No exit statement found");
-  }
-
-  Generator generator(tree.value());
+  Node::Program tree = parser.parse_program();
+  Generator generator(tree);
 
   {
     std::fstream file("out.asm", std::ios::out);
-    file << generator.generate();
+    file << generator.gen_program();
   }
 
   system("nasm -felf64 out.asm");

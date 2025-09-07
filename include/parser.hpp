@@ -34,7 +34,8 @@ class Parser {
 public:
   explicit Parser(std::vector<Token> tokens);
 
-  std::optional<Node::Program> parse();
+  Node::Program parse_program();
+  std::optional<Node::Stmt> parse_stmt();
 
 private:
 
