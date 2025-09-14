@@ -3,5 +3,5 @@
 #include <sstream>
 
 namespace fs {
-  std::string read_file(const char* path);
+std::string read_file(const char *path);
 }

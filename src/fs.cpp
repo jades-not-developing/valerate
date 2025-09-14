@@ -4,7 +4,7 @@
 
 #include "fs.hpp"
 
-std::string fs::read_file(const char* path) {
+std::string fs::read_file(const char *path) {
   std::stringstream buf;
   {
     std::fstream input(path, std::ios::in);

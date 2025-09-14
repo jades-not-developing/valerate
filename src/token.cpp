@@ -1,11 +1,11 @@
 #include "token.hpp"
 
-#include "types.h"
 #include "macros.hpp"
+#include "types.h"
 
+#include <cassert>
 #include <cctype>
 #include <iostream>
-#include <cassert>
 
 using namespace token;
 
@@ -58,7 +58,7 @@ std::vector<token::Token> Tokenizer::tokenize() {
   std::string buf;
 
   while (peek().has_value()) {
-    
+
     // Identifier/Keyword
     if (std::isalpha(peek().value())) {
       buf.push_back(consume());
@@ -69,13 +69,11 @@ std::vector<token::Token> Tokenizer::tokenize() {
         tokens.push_back(TOKEN_EXIT());
         buf.clear();
         continue;
-      }
-      else if (buf == "let") {
+      } else if (buf == "let") {
         tokens.push_back(TOKEN_LET());
         buf.clear();
         continue;
-      }
-      else {
+      } else {
         tokens.push_back(TOKEN_IDENT(buf));
         buf.clear();
         continue;
@@ -99,18 +97,15 @@ std::vector<token::Token> Tokenizer::tokenize() {
       consume();
       tokens.push_back(TOKEN_OPEN_PAREN());
       continue;
-    }
-    else if (peek().value() == '=') {
+    } else if (peek().value() == '=') {
       consume();
       tokens.push_back(TOKEN_EQ());
       continue;
-    }
-    else if (peek().value() == ')') {
+    } else if (peek().value() == ')') {
       consume();
       tokens.push_back(TOKEN_CLOSE_PAREN());
       continue;
-    }
-    else if (peek().value() == ';') {
+    } else if (peek().value() == ';') {
       consume();
       tokens.push_back(TOKEN_SEMI());
       continue;
@@ -134,13 +129,9 @@ std::vector<token::Token> Tokenizer::tokenize() {
 std::optional<char> Tokenizer::peek(i32 offset) const {
   if (m_Index + offset >= m_Src.length()) {
     return {};
-  } 
+  }
 
   return m_Src.at(m_Index + offset);
 }
 
-
-
-char Tokenizer::consume() {
-  return m_Src.at(m_Index++);
-}
+char Tokenizer::consume() { return m_Src.at(m_Index++); }

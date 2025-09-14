@@ -9,26 +9,31 @@
 using namespace token;
 
 namespace Node {
-  struct ExprIntLit { Token int_lit; };
-  struct ExprIdent { Token ident; };
-  struct Expr {
-    std::variant<ExprIntLit, ExprIdent> v;
-  };
+struct ExprIntLit {
+  Token int_lit;
+};
+struct ExprIdent {
+  Token ident;
+};
+struct Expr {
+  std::variant<ExprIntLit, ExprIdent> v;
+};
 
-  struct StmtExit { Node::Expr expr; };
-  struct StmtLet { 
-    Token ident;
-    Node::Expr expr;
-  };
-  struct Stmt {
-    std::variant<StmtExit, StmtLet> v;
-  };
+struct StmtExit {
+  Node::Expr expr;
+};
+struct StmtLet {
+  Token ident;
+  Node::Expr expr;
+};
+struct Stmt {
+  std::variant<StmtExit, StmtLet> v;
+};
 
-
-  struct Program {
-    std::vector<Node::Stmt> stmts; 
-  };
-}
+struct Program {
+  std::vector<Node::Stmt> stmts;
+};
+} // namespace Node
 
 class Parser {
 public:
@@ -38,7 +43,6 @@ public:
   std::optional<Node::Stmt> parse_stmt();
 
 private:
-
   [[nodiscard]] std::optional<Token> peek(i32 offset = 0) const;
   Token consume();
   bool expect(TokenType type, i32 offset = 0);
