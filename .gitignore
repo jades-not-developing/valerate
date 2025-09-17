@@ -1,5 +1,6 @@
 build/
 *.bat
 out.o
+out.obj
 out.asm
 out.exe

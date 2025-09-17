@@ -22,7 +22,7 @@ private:
   const Node::Program m_Program;
   std::stringstream m_Output;
   usize m_StackSize = 0;
-  bool m_HasGeneratedExit;
+  bool m_HasGeneratedExit = false;
   std::unordered_map<std::string, Var> m_Vars{};
 
 private:

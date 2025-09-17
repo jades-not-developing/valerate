@@ -16,6 +16,13 @@ void Generator::gen_expr(const Node::Expr &expr) {
     void operator()(const Node::ExprIdent &expr_ident) const {
       if (!expr_ident.ident.value.has_value()) PANIC("Malformed ExprIdent, ident does not contain value (this is probably a compiler bug)");
       if (!gen->m_Vars.contains(expr_ident.ident.value.value())) PANIC("Undeclared identifier `" << expr_ident.ident.value.value() << "`");
+
+      const auto& var = gen->m_Vars.at(expr_ident.ident.value.value());
+
+      std::stringstream offset;
+      offset << "QWORD [rsp + " << (gen->m_StackSize - var.stack_loc) * 4 << "]";
+
+      gen->push(offset.str());
     }
   };
 
@@ -30,8 +37,8 @@ void Generator::gen_stmt(const Node::Stmt &stmt) {
     void operator()(const Node::StmtExit &stmt_exit) const {
       gen->m_HasGeneratedExit = true;
       gen->gen_expr(stmt_exit.expr);
-      gen->pop("rax");
-      gen->m_Output << "    ret\n";
+      gen->m_Output << "    mov rcx, rax\n";
+      gen->m_Output << "    call ExitProcess\n";
     }
 
     void operator()(const Node::StmtLet &stmt_let) const {
@@ -48,26 +55,29 @@ void Generator::gen_stmt(const Node::Stmt &stmt) {
 }
 
 std::string Generator::gen_program() {
-  m_Output << "global _start\n_start:\n";
+  m_Output << "global WinMainCRTStartup\n";
+  m_Output << "extern ExitProcess\n";
+  m_Output << "section .text\n";
+  m_Output << "WinMainCRTStartup:\n";
 
   for (const Node::Stmt &stmt : m_Program.stmts) {
     gen_stmt(stmt);
   }
 
   if (!m_HasGeneratedExit) {
-    m_Output << "    mov rax, 0\n";
-    m_Output << "    ret\n";
+    m_Output << "    mov rcx, 0\n";
+    m_Output << "    call ExitProcess\n";
   }
 
   return m_Output.str();
 }
 
 void Generator::push(const std::string &reg) {
-  m_Output << "push " << reg << "\n";
+  m_Output << "    push " << reg << "\n";
   m_StackSize++;
 }
 
 void Generator::pop(const std::string &reg) {
-  m_Output << "pop " << reg << "\n";
+  m_Output << "    pop " << reg << "\n";
   m_StackSize--;
 }

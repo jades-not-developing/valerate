@@ -32,8 +32,8 @@ i32 main(i32 argc, char *argv[]) {
     file << generator.gen_program();
   }
 
-  system("nasm -felf64 out.asm");
-  system("ld -o out.exe out.o");
+  system("nasm -f win64 -g out.asm");
+  system("link /SUBSYSTEM:WINDOWS msvc/kernel32.lib msvc/user32.lib out.obj");
 
   return EXIT_SUCCESS;
 }
