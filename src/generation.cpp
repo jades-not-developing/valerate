@@ -20,7 +20,7 @@ void Generator::gen_expr(const Node::Expr &expr) {
       const auto& var = gen->m_Vars.at(expr_ident.ident.value.value());
 
       std::stringstream offset;
-      offset << "QWORD [rsp + " << (gen->m_StackSize - var.stack_loc) * 4 << "]";
+      offset << "QWORD [rsp + " << (gen->m_StackSize - var.stack_loc - 1) * 8 << "]";
 
       gen->push(offset.str());
     }
@@ -37,7 +37,8 @@ void Generator::gen_stmt(const Node::Stmt &stmt) {
     void operator()(const Node::StmtExit &stmt_exit) const {
       gen->m_HasGeneratedExit = true;
       gen->gen_expr(stmt_exit.expr);
-      gen->m_Output << "    mov rcx, rax\n";
+      gen->pop("rcx");
+      //gen->m_Output << "    mov rcx, rax\n";
       gen->m_Output << "    call ExitProcess\n";
     }
 
