@@ -13,6 +13,7 @@
 using namespace token;
 
 i32 main(i32 argc, char *argv[]) {
+  std::cout << "hi" << std::endl;
   if (argc != 2) {
     PANIC("Incorrect Usage" << std::endl
                             << argv[0] << " \033[40;37m<input.diol>");

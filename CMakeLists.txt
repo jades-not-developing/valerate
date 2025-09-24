@@ -4,6 +4,8 @@ project(Valerate)
 
 option(VALERATE_DEBUG "Creates a debug build" OFF)
 
+set(CMAKE_BUILD_TYPE Debug)
+
 if (VALERATE_DEBUG)
   add_compile_definitions(VALERATE_DEBUG)
   message(WARNING "=*=      Debug Mode Enabled!      =*=")

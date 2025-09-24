@@ -5,10 +5,25 @@
 
 #include "token.hpp"
 #include "types.h"
+#include "arena.hpp"
 
 using namespace token;
 
 namespace Node {
+
+struct Expr;
+struct BinExprAdd {
+  Expr* lhs;
+  Expr* rhs;
+};
+struct BinExprMul {
+  Expr* lhs;
+  Expr* rhs;
+};
+struct BinExpr {
+  std::variant<BinExprAdd*, BinExprMul*> v;
+};
+
 struct ExprIntLit {
   Token int_lit;
 };
@@ -16,22 +31,22 @@ struct ExprIdent {
   Token ident;
 };
 struct Expr {
-  std::variant<ExprIntLit, ExprIdent> v;
+  std::variant<ExprIntLit*, ExprIdent*, BinExpr*> v;
 };
 
 struct StmtExit {
-  Node::Expr expr;
+  Expr* expr;
 };
 struct StmtLet {
   Token ident;
-  Node::Expr expr;
+  Expr* expr;
 };
 struct Stmt {
-  std::variant<StmtExit, StmtLet> v;
+  std::variant<StmtExit*, StmtLet*> v;
 };
 
 struct Program {
-  std::vector<Node::Stmt> stmts;
+  std::vector<Stmt> stmts;
 };
 } // namespace Node
 
@@ -47,8 +62,9 @@ private:
   Token consume();
   bool expect(TokenType type, i32 offset = 0);
 
-  std::optional<Node::Expr> parse_expr();
+  std::optional<Node::Expr*> parse_expr();
 
   const std::vector<Token> m_Tokens;
   usize m_Index = 0;
+  ArenaAllocator m_Alloc;
 };

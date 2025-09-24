@@ -2,7 +2,8 @@
 #include "macros.hpp"
 #include "token.hpp"
 
-Parser::Parser(std::vector<Token> tokens) : m_Tokens(std::move(tokens)) {}
+Parser::Parser(std::vector<Token> tokens)
+    : m_Tokens(std::move(tokens)), m_Alloc(1024 * 1024 * 4) {}
 
 std::optional<Token> Parser::peek(i32 offset) const {
   if (m_Index + offset >= m_Tokens.size()) {
@@ -18,12 +19,26 @@ bool Parser::expect(TokenType type, i32 offset) {
   return peek(offset).has_value() && peek(offset).value().type == type;
 }
 
-std::optional<Node::Expr> Parser::parse_expr() {
-  if (expect(TokenType::int_lit))
-    return Node::Expr{.v = Node::ExprIntLit{.int_lit = consume()}};
+std::optional<Node::Expr*> Parser::parse_expr() {
+  if (expect(TokenType::int_lit)) {
+    auto expr_int_lit = m_Alloc.alloc<Node::ExprIntLit>();
+    expr_int_lit->int_lit = consume();
 
-  else if (expect(TokenType::ident))
-    return Node::Expr{.v = Node::ExprIdent{.ident = consume()}};
+    auto expr = m_Alloc.alloc<Node::Expr>();
+    expr->v = expr_int_lit;
+
+    return expr;
+  }
+
+  else if (expect(TokenType::ident)) {
+    auto expr_ident = m_Alloc.alloc<Node::ExprIdent>();
+    expr_ident->ident = consume();
+
+    auto expr = m_Alloc.alloc<Node::Expr>();
+    expr->v = expr_ident;
+
+    return expr;
+  }
 
   else
     return {};
@@ -34,10 +49,10 @@ std::optional<Node::Stmt> Parser::parse_stmt() {
     consume();
     consume();
 
-    Node::StmtExit stmt_exit;
+    auto stmt_exit = m_Alloc.alloc<Node::StmtExit>();
 
     if (auto node_expr = parse_expr())
-      stmt_exit = Node::StmtExit{.expr = node_expr.value()};
+      stmt_exit->expr = node_expr.value();
     else
       PANIC("Invalid Expression!");
 
@@ -58,11 +73,12 @@ std::optional<Node::Stmt> Parser::parse_stmt() {
     if (!expect(TokenType::eq, 2))
       PANIC("Expected `=`, found " << peek(1).value());
     consume();
-    auto stmt_let = Node::StmtLet{.ident = consume()};
+    auto stmt_let = m_Alloc.alloc<Node::StmtLet>();
+    stmt_let->ident = consume();
     consume();
 
     if (auto expr = parse_expr()) {
-      stmt_let.expr = expr.value();
+      stmt_let->expr = expr.value();
     } else {
       PANIC("Invalid expression");
     }
