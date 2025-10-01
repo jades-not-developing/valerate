@@ -48,6 +48,12 @@ std::ostream &token::operator<<(std::ostream &os, const Token &t) {
   case token::TokenType::close_paren: {
     os << "CloseParen";
   } break;
+  case token::TokenType::plus: {
+    os << "Plus";
+  } break;
+  case token::TokenType::star: {
+    os << "Star";
+  } break;
   }
 
   return os;
@@ -109,7 +115,16 @@ std::vector<token::Token> Tokenizer::tokenize() {
       consume();
       tokens.push_back(TOKEN_SEMI());
       continue;
+    } else if (peek().value() == '+') {
+      consume();
+      tokens.push_back(TOKEN_PLUS());
+      continue;
+    } else if (peek().value() == '*') {
+      consume();
+      tokens.push_back(TOKEN_STAR());
+      continue;
     }
+
 
     // Whitespace
     else if (std::isspace(peek().value())) {

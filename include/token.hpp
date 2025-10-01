@@ -12,6 +12,8 @@
 #define TOKEN_IDENT(x) {.type = token::TokenType::ident, .value = x}
 #define TOKEN_LET() {.type = token::TokenType::let}
 #define TOKEN_EQ() {.type = token::TokenType::eq}
+#define TOKEN_PLUS() {.type = token::TokenType::plus}
+#define TOKEN_STAR() {.type = token::TokenType::star}
 
 namespace token {
 #include "types.h"
@@ -25,6 +27,8 @@ enum class TokenType {
   ident,
   let,
   eq,
+  plus,
+  star,
 };
 
 struct Token {

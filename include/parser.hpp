@@ -63,6 +63,7 @@ private:
   bool expect(TokenType type, i32 offset = 0);
 
   std::optional<Node::Expr*> parse_expr();
+  std::optional<Node::BinExpr*> parse_bin_expr();
 
   const std::vector<Token> m_Tokens;
   usize m_Index = 0;
