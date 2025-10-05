@@ -3,9 +3,9 @@
 #include <variant>
 #include <vector>
 
+#include "arena.hpp"
 #include "token.hpp"
 #include "types.h"
-#include "arena.hpp"
 
 using namespace token;
 
@@ -13,36 +13,40 @@ namespace Node {
 
 struct Expr;
 struct BinExprAdd {
-  Expr* lhs;
-  Expr* rhs;
+  Expr *lhs;
+  Expr *rhs;
 };
-struct BinExprMul {
-  Expr* lhs;
-  Expr* rhs;
-};
+// struct BinExprMul {
+//   Expr *lhs;
+//   Expr *rhs;
+// };
 struct BinExpr {
-  std::variant<BinExprAdd*, BinExprMul*> v;
+  BinExprAdd *v;
 };
 
-struct ExprIntLit {
+struct TermIntLit {
   Token int_lit;
 };
-struct ExprIdent {
+struct TermIdent {
   Token ident;
 };
+struct Term {
+  std::variant<TermIntLit *, TermIdent *> v;
+};
+
 struct Expr {
-  std::variant<ExprIntLit*, ExprIdent*, BinExpr*> v;
+  std::variant<Term *, BinExpr *> v;
 };
 
 struct StmtExit {
-  Expr* expr;
+  Expr *expr;
 };
 struct StmtLet {
   Token ident;
-  Expr* expr;
+  Expr *expr;
 };
 struct Stmt {
-  std::variant<StmtExit*, StmtLet*> v;
+  std::variant<StmtExit *, StmtLet *> v;
 };
 
 struct Program {
@@ -62,8 +66,8 @@ private:
   Token consume();
   bool expect(TokenType type, i32 offset = 0);
 
-  std::optional<Node::Expr*> parse_expr();
-  std::optional<Node::BinExpr*> parse_bin_expr();
+  std::optional<Node::Expr *> parse_expr();
+  std::optional<Node::Term *> parse_term();
 
   const std::vector<Token> m_Tokens;
   usize m_Index = 0;

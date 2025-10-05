@@ -10,6 +10,7 @@ public:
 
   void gen_stmt(const Node::Stmt &stmt);
   void gen_expr(const Node::Expr* expr);
+  void gen_term(const Node::Term* term);
 
   std::string gen_program();
 

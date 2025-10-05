@@ -11,8 +11,7 @@ $$
 
 [\text{Expr}] &\to 
 	\begin{cases}
-		\text{IntLit} \\
-		\text{Ident}  \\
+		[\text{Term}] \\
         [\text{BinExpr}] \\
 	\end{cases} \\
 
@@ -20,7 +19,13 @@ $$
     \begin{cases}
          [\text{Expr}] * [\text{Expr}] & \text{prec} = 1 \\
          [\text{Expr}] + [\text{Expr}] & \text{prec} = 0 \\
-    \end{cases}
+    \end{cases} \\
+
+ [\text{Term}] &\to 
+   \begin{cases}
+        \text{int\_lit} \\
+        \text{ident} \\
+   \end{cases}
 
 \end{align}
 $$
